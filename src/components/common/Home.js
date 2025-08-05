@@ -128,6 +128,7 @@ function Home() {
       <div className="container">
         {/* Latest Products with slider */}
         <div className="glass-card mb-4 px-4 py-4 animate__animated animate__fadeInDown d-flex align-items-center justify-content-between shadow-sm rounded-4">
+          <h3>may take a few minutes if server is sleeping</h3>
           <h3 className="fw-bold text-gradient mb-0">
             <i className="fa-solid fa-bolt me-2"></i> Latest Products
           </h3>
