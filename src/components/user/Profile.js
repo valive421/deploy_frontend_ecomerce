@@ -20,7 +20,7 @@ function Profile() {
 
   useEffect(() => {
     if (customerid) {
-      fetch(`http://127.0.0.1:8000/api/customer/${customerid}/`)
+      fetch(`${BASE_URL}/customer/${customerid}/`)
         .then(res => res.json())
         .then(data => {
           // Map API response to profile state
@@ -53,7 +53,6 @@ function Profile() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Prepare form data for PATCH request
     const formData = new FormData();
     formData.append("first_name", profile.firstName);
     formData.append("last_name", profile.lastName);
@@ -65,26 +64,39 @@ function Profile() {
       formData.append("image", fileInputRef.current.files[0]);
     }
 
-    // Update user info (PATCH to /api/customer/<id>/)
     fetch(`${BASE_URL}/customer/${customerid}/`, {
       method: "PATCH",
       body: formData,
     })
       .then(res => res.json())
       .then(data => {
-        setEdit(false);
-        fetch(`${BASE_URL}/customer/${customerid}/`)
-          .then(res => res.json())
-          .then(data => {
-            setProfile({
-              firstName: data.user?.first_name || "",
-              lastName: data.user?.last_name || "",
-              email: data.user?.email || "",
-              profilePic: (data.profilepic && data.profilepic.length > 0) ? data.profilepic[0].image : "",
-              username: data.user?.username || "",
-              mobile: data.mobile || "",
-            });
-          });
+        // Only set edit to false if update was successful
+        if (data && (data.id || data.user)) {
+          setEdit(false);
+          // Optionally update local profile state directly instead of refetching
+          setProfile(prev => ({
+            ...prev,
+            firstName: data.user?.first_name || prev.firstName,
+            lastName: data.user?.last_name || prev.lastName,
+            email: data.user?.email || prev.email,
+            profilePic: (data.profilepic && data.profilepic.length > 0) ? data.profilepic[0].image : prev.profilePic,
+            username: data.user?.username || prev.username,
+            mobile: data.mobile || prev.mobile,
+          }));
+        }
+        // If you want to refetch, do it after setEdit(false)
+        // fetch(`${BASE_URL}/customer/${customerid}/`)
+        //   .then(res => res.json())
+        //   .then(data => {
+        //     setProfile({
+        //       firstName: data.user?.first_name || "",
+        //       lastName: data.user?.last_name || "",
+        //       email: data.user?.email || "",
+        //       profilePic: (data.profilepic && data.profilepic.length > 0) ? data.profilepic[0].image : "",
+        //       username: data.user?.username || "",
+        //       mobile: data.mobile || "",
+        //     });
+        //   });
       });
   }
 
@@ -111,7 +123,7 @@ function Profile() {
                 }}
               />
             </div>
-            <form onSubmit={handleSubmit}>
+            <form id="profileForm" onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label className="form-label">First Name</label>
                 <input name="firstName" className="form-control" value={profile.firstName} onChange={handleChange} disabled={!edit} />
@@ -143,12 +155,25 @@ function Profile() {
                   disabled={!edit}
                 />
               </div>
-              {edit ? (
-                <button type="submit" className="btn btn-success w-100 mb-2">Save</button>
-              ) : (
-                <button type="button" className="btn btn-primary w-100 mb-2" onClick={() => setEdit(true)}>Edit</button>
-              )}
             </form>
+            <div className="d-flex gap-2">
+              <button
+                type="button"
+                className="btn btn-primary w-50 mb-2"
+                onClick={() => setEdit(true)}
+                disabled={edit}
+              >
+                Edit
+              </button>
+              <button
+                type="submit"
+                className="btn btn-success w-50 mb-2"
+                form="profileForm"
+                disabled={!edit}
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       </div>

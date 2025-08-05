@@ -112,3 +112,43 @@
     color: #fff !important;
     background: #2563eb !important;
 }
+@media (max-width: 600px) {
+  .liquid-glass-bg {
+    min-height: 60vh;
+    padding-bottom: 10px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .glass-card {
+    border-radius: 0.75rem;
+    padding: 10px;
+    box-shadow: 0 4px 12px 0 rgba(31, 38, 135, 0.20);
+    margin-bottom: 10px;
+  }
+  .btn-glass {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    width: 100%;
+  }
+  .text-gradient {
+    font-size: 1.1rem;
+  }
+  .table {
+    font-size: 0.95rem;
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+  .modal-content.glass-card {
+    border-radius: 1rem;
+    padding: 10px;
+  }
+  .alert.glass-card {
+    border-radius: 0.75rem;
+    padding: 8px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Apply the same improvements as above for common screens */

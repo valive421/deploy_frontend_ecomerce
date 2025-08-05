@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import './liquidGlass.css';
 
@@ -12,68 +12,83 @@ function Sidebar() {
     { to: "/addresses", label: "Addresses", icon: "fa-solid fa-location-dot" },
     { to: "/changepassword", label: "Change Password", icon: "fa-solid fa-key" }
   ];
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 600);
+
+  React.useEffect(() => {
+    function handleResize() {
+      setShowSidebar(window.innerWidth > 600);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <div
-      className="col-12 col-md-3 mb-4 mb-md-0"
-      style={{
-        minHeight: "100vh",
-        position: "sticky",
-        top: 0,
-        paddingBottom: "2rem",
-        background: "transparent",
-        zIndex: 2
-      }}
-    >
+    <>
+      {/* Hamburger for mobile */}
+      <button
+        className="btn btn-glass d-md-none mb-2"
+        style={{ position: "fixed", top: 12, left: 12, zIndex: 1001 }}
+        onClick={() => setShowSidebar(s => !s)}
+        aria-label="Toggle sidebar"
+      >
+        <i className="fa fa-bars"></i>
+      </button>
+      {/* Sidebar */}
       <div
-        className="glass-card shadow-sm border-0 h-100 animate__animated animate__fadeInLeft"
+        className={`col-md-3 mb-4 mb-md-0 sidebar-glass ${showSidebar ? "show" : "hide"}`}
         style={{
-          borderRadius: "2rem",
-          overflow: "hidden",
-          minWidth: 0,
-          background: "rgba(255,255,255,0.25)",
-          height: "100%",
+          position: window.innerWidth <= 600 ? "fixed" : "static",
+          top: window.innerWidth <= 600 ? 0 : undefined,
+          left: window.innerWidth <= 600 ? 0 : undefined,
+          zIndex: window.innerWidth <= 600 ? 1000 : undefined,
+          width: window.innerWidth <= 600 ? "70vw" : undefined,
+          height: window.innerWidth <= 600 ? "100vh" : undefined,
+          background: window.innerWidth <= 600 ? "rgba(255,255,255,0.97)" : undefined,
+          boxShadow: window.innerWidth <= 600 ? "0 0 24px rgba(0,0,0,0.15)" : undefined,
+          transition: "left 0.2s, opacity 0.2s"
         }}
       >
-        <ul className="list-group list-group-flush" style={{ borderRadius: "2rem", overflow: "hidden" }}>
+        <div className="list-group glass-card shadow-sm">
           {navLinks.map((link, idx) => {
             const isActive = location.pathname.startsWith(link.to);
             return (
-              <li
+              <Link
                 key={link.to}
-                className={`list-group-item d-flex align-items-center px-4 py-3 border-0 ${isActive ? "active" : ""}`}
+                to={link.to}
+                className={`list-group-item list-group-item-action${isActive ? " active" : ""}`}
                 style={{
-                  background: isActive ? "linear-gradient(90deg,#2563eb 0%,#06b6d4 100%)" : "transparent",
+                  background: isActive ? "#2563eb" : "transparent",
                   color: isActive ? "#fff" : "#222",
                   fontWeight: isActive ? "bold" : "normal",
-                  borderLeft: "none",
-                  borderRight: "none",
-                  borderTop: idx === 0 ? "none" : undefined,
-                  borderBottom: idx === navLinks.length - 1 ? "none" : undefined,
                   borderRadius: 0,
                   transition: "background 0.2s, color 0.2s",
                   cursor: "pointer",
                 }}
+                onClick={() => window.innerWidth <= 600 && setShowSidebar(false)}
               >
-                <i className={`${link.icon} me-3`} style={{ minWidth: 22, fontSize: 20, color: isActive ? "#fff" : "#2563eb" }}></i>
-                <Link
-                  to={link.to}
-                  className={`flex-grow-1 text-decoration-none ${isActive ? "text-white" : "text-dark"}`}
-                  style={{
-                    fontWeight: "inherit",
-                    fontSize: "1.08rem",
-                    color: isActive ? "#fff" : "#222",
-                    background: "transparent",
-                  }}
-                >
-                  {link.label}
-                </Link>
-              </li>
+                <i className={`${link.icon} me-2`} style={{ fontSize: 20, color: isActive ? "#fff" : "#222" }}></i>
+                {link.label}
+              </Link>
             );
           })}
-        </ul>
+        </div>
       </div>
-    </div>
+      {/* Overlay for mobile sidebar */}
+      {window.innerWidth <= 600 && showSidebar && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.15)",
+            zIndex: 999
+          }}
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
+    </>
   );
 }
 
