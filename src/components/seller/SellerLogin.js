@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext, BASE_URL } from "../context";
 
@@ -11,6 +11,7 @@ function SellerLogin() {
     password: ''
   });
   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
 
   const inputHandler = (event) => {
     setLoginFormData({
@@ -46,7 +47,7 @@ function SellerLogin() {
           localStorage.setItem('seller_username', response.data.user);
           setFormError(false);
           setErrorMsg('');
-          window.location.href = '/seller/dashboard';
+          navigate('/seller/dashboard');
         }
       })
       .catch(function (error) {
@@ -57,7 +58,7 @@ function SellerLogin() {
 
   const checkSeller = localStorage.getItem('seller_login');
   if (checkSeller) {
-    window.location.href = '/seller/dashboard';
+    navigate('/seller/dashboard');
   }
   const buttonEnable = loginFormData.username !== '' && loginFormData.password !== '';
 

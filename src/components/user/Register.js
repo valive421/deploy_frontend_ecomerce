@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
 import {useState} from "react";
 import { BASE_URL } from "../context";
@@ -17,6 +17,7 @@ function Register() {
     "password": '',
     "mobile": ''
   });
+  const navigate = useNavigate();
 
   const inputHandler = (event) => {
     setRegisterFormData({
@@ -63,7 +64,7 @@ const submitHandler = (event) => {
             customer_id: response.data.id
           }));
         }
-        window.location.href = '/login'; // Redirect to login on success
+        navigate('/login'); // Redirect to login on success
       }
     });
 };

@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
 import {useState, useContext} from "react";
 import { UserContext, BASE_URL } from '../context';
@@ -13,6 +13,7 @@ function CustomerLogin(props){
         "password":''
     });
     const userContext = useContext(UserContext);
+    const navigate = useNavigate();
 
     const inputHandler =(event) => {
         setLoginFormData({
@@ -58,7 +59,7 @@ function CustomerLogin(props){
 
     const checkCustomer = localStorage.getItem('customer_login');
     if(checkCustomer){
-        window.location.href='/dashboard'
+        navigate('/dashboard');
     }
     const buttonEnable=(loginFormData.username!='') && (loginFormData.password!='')
 

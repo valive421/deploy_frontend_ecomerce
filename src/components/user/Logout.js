@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from '../context';
 import './liquidGlass.css';
 
 function Logout() {
   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
   useEffect(() => {
     if (userContext && typeof userContext.setUserContext === "function") {
       userContext.setUserContext({ login: false });
@@ -13,7 +14,7 @@ function Logout() {
     localStorage.removeItem('customer_id');
     localStorage.removeItem('customer_login');
     localStorage.removeItem('customer_username');
-    window.location.href='/login';
+    navigate('/login');
   }, []);
 
   return (

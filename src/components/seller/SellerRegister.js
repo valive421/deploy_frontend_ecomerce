@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useState, useRef } from "react";
 
@@ -18,6 +18,7 @@ function SellerRegister() {
     profile_pic: null
   });
   const fileInputRef = useRef();
+  const navigate = useNavigate();
 
   const inputHandler = (event) => {
     const { name, value, files } = event.target;
@@ -77,7 +78,7 @@ function SellerRegister() {
               seller_id: response.data.vendor
             }));
           }
-          //window.location.href = '/seller/login';
+          navigate('/seller/login'); // Redirect to login after successful registration
         }
       });
   };
